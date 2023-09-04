@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './FP.css';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import client from '../../API/client';
 
 const FP = () => {
@@ -11,6 +11,9 @@ const FP = () => {
     const [hasError, setHasError] = useState(false);
     const [error, setError] = useState('');
     const [updated, isUpdated] = useState(false);
+
+    const naviagte = useNavigate();
+
     const onChnagePassword = () => {
         if (password !== confirmPassword) {
             setHasError(true);
@@ -42,6 +45,7 @@ const FP = () => {
                 setTimeout(() => {
                     isUpdated(false);
                 }, 4000);
+                naviagte('/login');
             }
         }).catch(err => console.log(err));
     }

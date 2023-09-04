@@ -108,6 +108,7 @@ const Home = () => {
           <tr>
             <th scope="col">id</th>
             <th scope="col">Content</th>
+            <th scope="col">Image</th>
             <th scope="col">Edit</th>
             <th scope="col">Delete</th>
           </tr>
