@@ -7,6 +7,7 @@ import './Signup.css';
 const Signup = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
 
@@ -14,6 +15,7 @@ const Signup = () => {
 
     const handlesignup = (e) => {
         e.preventDefault();
+        setIsLoading(true);
         const emailRegex = new RegExp(/^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/, "gm")
         const isValidEmail = emailRegex.test(email);
         const passwordRegex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&]).{5,20}$/, "gm");
@@ -23,6 +25,7 @@ const Signup = () => {
             setTimeout(() => {
                 setError('');
             }, 4000);
+            setIsLoading(false);
             return;
         }
         if (!isPasswordValid) {
@@ -30,6 +33,7 @@ const Signup = () => {
             setTimeout(() => {
                 setError('');
             }, 4000);
+            setIsLoading(false);
             return;
         }
         client.post('/signup', {
@@ -43,10 +47,13 @@ const Signup = () => {
                 setTimeout(() => {
                     navigate('/login');
                 }, 500);
+                setIsLoading(false);
                 return;
             }
+            setIsLoading(false);
             setError(result.err);
         }).catch((err) => {
+            setIsLoading(false);
             setError(err.message);
         })
     }
@@ -73,7 +80,7 @@ const Signup = () => {
                     <label>Password</label>
                     <input type="password" placeholder="Enter password" required name="password" onChange={(e) => setPassword(e.target.value)} />
                 </div>
-                <button onClick={handlesignup}>Submit</button>
+                <button onClick={handlesignup} disabled={isLoading}>{isLoading ? 'Loading..' : 'Signup'}</button>
                 <div className="signup">
                     <span className="signup">Had an account?
                         <label htmlFor="check"><Link to='/login'>Login</Link></label>

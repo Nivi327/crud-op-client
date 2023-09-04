@@ -9,12 +9,14 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [hasError, setHasError] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
     const navigate = useNavigate();
 
     const onHandleSubmit = (e) => {
         e.preventDefault();
+        setIsLoading(true);
         client.post('/login', {
             email,
             password
@@ -27,6 +29,7 @@ const Login = () => {
                 setTimeout(() => {
                     setHasError(false);
                 }, 4000);
+                setIsLoading(false);
                 return;
             } else if (data.token) {
                 const token = data?.token;
@@ -36,7 +39,8 @@ const Login = () => {
                     setError("Invalid Email and Password");
                     setTimeout(() => {
                         setHasError(false);
-                    }, 4000)
+                    }, 4000);
+                    setIsLoading(false);
                     return;
                 }
                 localStorage.setItem('auth', JSON.stringify({
@@ -52,9 +56,13 @@ const Login = () => {
                 setEmail('');
                 document.getElementById('password').value = '';
                 setPassword('');
+                setIsLoading(false);
                 navigate(`/home/${id}`);
             }
-        }).catch(err => console.log(err));
+        }).catch(err => {
+            setIsLoading(false);
+            setError(err.message);
+        });
     }
 
     return (
